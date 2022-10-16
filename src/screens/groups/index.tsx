@@ -6,9 +6,11 @@ import { Highlight } from '@components/Highlight';
 
 import { Container } from './styles';
 import { FlatList } from 'react-native';
+import { ListEmpty } from '@components/ListEmpty';
 
 export function Groups() {
-  const [groups, setGroups] = useState<Array<string>>(['Rocket']);
+  // const [groups, setGroups] = useState<Array<string>>(['Rocket']);
+  const [groups, setGroups] = useState<Array<string>>([]);
 
   return (
     <Container>
@@ -21,6 +23,10 @@ export function Groups() {
         keyExtractor={item => item}
         renderItem={({item}) => (
           <GruopCard title={item}/>
+        )}
+        contentContainerStyle={groups.length === 0 && { flex: 1 }}
+        ListEmptyComponent={() => (
+          <ListEmpty message="Que tal cadastrar a primeira turma?"/>
         )}
       />      
     </Container>
