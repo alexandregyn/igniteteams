@@ -1,17 +1,22 @@
 import { useState } from 'react';
+import { FlatList } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-import { GruopCard } from '@components/GroupCard';
 import { Header } from '@components/Header';
+import { Button } from '@components/Button';
+import { GruopCard } from '@components/GroupCard';
 import { Highlight } from '@components/Highlight';
+import { ListEmpty } from '@components/ListEmpty';
 
 import { Container } from './styles';
-import { FlatList } from 'react-native';
-import { ListEmpty } from '@components/ListEmpty';
-import { Button } from '@components/Button';
 
 export function Groups() {
-  // const [groups, setGroups] = useState<Array<string>>(['Rocket']);
   const [groups, setGroups] = useState<Array<string>>([]);
+  const navigation = useNavigation();
+
+  const handleNewGroup = () => {
+    navigation.navigate('new');
+  }
 
   return (
     <Container>
@@ -33,7 +38,8 @@ export function Groups() {
       />
 
       <Button 
-        title="Criar nova turma" 
+        title="Criar nova turma"
+        onPress={handleNewGroup}
       />   
     </Container>
   );
