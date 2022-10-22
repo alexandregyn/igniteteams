@@ -13,6 +13,7 @@ import { Input } from "@components/Input";
 import { Filter } from "@components/Filter";
 import { Button } from "@components/Button";
 import { Header } from "@components/Header";
+import { Loading } from "@components/Loading";
 import { Highlight } from "@components/Highlight";
 import { ListEmpty } from "@components/ListEmpty";
 import { ButtonIcon } from "@components/ButtonIcon";
@@ -25,6 +26,7 @@ type RouterParams = {
 }
 
 export function Players() {
+  const [isLoaging, setIsLoading] = useState(true);
   const [newPlayerName, setNewPlayName] = useState('');
   const [team, setTeam] = useState('Time A');
   const [players, setPlayers] = useState<Array<PlayerStorageDTO>>([]);
@@ -63,8 +65,10 @@ export function Players() {
 
   const fetchPlayersByTeam = async () => {
     try {
+      setIsLoading(true);
       const playersByTeam = await playerGetByGroupAndTeam(group, team);
       setPlayers(playersByTeam);
+      setIsLoading(false);
     } catch (error) {
       Alert.alert('Pessoas', 'Não foi possível carregar as pessoas do time selecionado.');
       console.error(error);
@@ -148,24 +152,27 @@ export function Players() {
         </NumberOfPlayers>     
       </HeaderList>
 
-      <FlatList 
-        data={players}
-        keyExtractor={item => item.name}
-        renderItem={({ item }) => (
-          <PlayerCard 
-            name={item.name}
-            onRemove={() => handlePlayerRemove(item.name)}  
-          />
-        )}
-        ListEmptyComponent={() => (
-          <ListEmpty message="Não há pessoas nesse time."/>
-        )}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={[
-          { paddingBottom: 100 },
-          players.length === 0 && { flex: 1 }
-        ]}
-      />
+      {
+        isLoaging ? <Loading /> : 
+        <FlatList 
+          data={players}
+          keyExtractor={item => item.name}
+          renderItem={({ item }) => (
+            <PlayerCard 
+              name={item.name}
+              onRemove={() => handlePlayerRemove(item.name)}  
+            />
+          )}
+          ListEmptyComponent={() => (
+            <ListEmpty message="Não há pessoas nesse time."/>
+          )}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={[
+            { paddingBottom: 100 },
+            players.length === 0 && { flex: 1 }
+          ]}
+        />
+      }
 
       <Button 
         title="Remover Turma"
